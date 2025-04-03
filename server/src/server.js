@@ -1,6 +1,6 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import 'dotenv/config'
 import connectToDb from "./config/db.js";
 import router from "./routes/email.router.js";
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/v1/api", router);
 
 // Start server
-const PORT = process.env.PORT || 2000;
+const PORT = process.env?.PORT || 2000;
 
 // Database connection
 connectToDb();
