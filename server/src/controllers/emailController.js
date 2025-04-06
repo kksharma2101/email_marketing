@@ -26,19 +26,19 @@ agenda.define("send email", async (job) => {
 
 export const sendSchedualEmail = async (req, res) => {
   try {
-    const { recipient, subject, body } = req.body;
-    const scheduledTime = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+    const { recipient, subject, body, scheduledTime } = req.body;
+    // const scheduledTime = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
 
     const email = new Email({ recipient, subject, body, scheduledTime });
     await email.save();
-    await agenda.schedule(scheduledTime, "send email", {
+    await agenda.schedule(new Date(scheduledTime), "send email", {
       recipient,
       subject,
       body,
     });
     res
       .status(201)
-      .json({ message: "Email Scheduled to be sent after 1 hour" });
+      .json({ message: "Email send as Scheduled time" });
   } catch (error) {
     res.status(404).json({
       success: false,
