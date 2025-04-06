@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState, useCallback } from "react";
 import ReactFlow, { addEdge, Background, Controls, MiniMap } from "reactflow";
@@ -23,31 +23,35 @@ export const EmailFlow = () => {
     (params) => setEdges((eds) => addEdge(params, eds))[setEdges]
   );
   // functions
-  const handleSources = () => {
-    if (sources) {
-      setSources(true);
-    }
+  const handleSourcesOpen = () => {
+    setSources(true);
+  };
+
+  const handleSourcesClose = () => {
+    setSources(false);
   };
 
   return (
     <div>
-      <div className="emailflow-nav">
-        <div className="box-1">
-          <h3 className="">Delete ✏️</h3>
+      <div className="flex justify-between items-center py-4 px-4 shadow-sm">
+        <div className="">
+          <h3 className="pl-2">Delete ✏️</h3>
           <p>Click on a block to configure and add it in sequence</p>
         </div>
-        <div className="box-2">
-          <button>🚀 Save & Schedule | ▲</button>
+        <div className="">
+          <button className="bg-blue-600 text-white py-2 px-3 rounded-md">🚀 Save & Schedule | ▲</button>
         </div>
       </div>
-      <div className="emailflow-main">
-        <div className="inside-container" onClick={handleSources}>
+
+      <div className="w-dvw h-dvh flex justify-center items-center flex-col">
+        
+        <div className="flex justify-center items-center flex-col p-3 border rounded-md relative top-5 -z-0" onClick={handleSourcesOpen}>
           <span>+</span>
           <h3>Add Lead Source</h3>
           <p>Click to add leads from List or CRM</p>
         </div>
 
-        {!sources && <AddSourcesBlock/>}
+        {sources ? <AddSourcesBlock onClose={handleSourcesClose} /> : ""}
 
         {/* ReactFlow elements */}
         <ReactFlow nodes={nodes} edges={edges} onConnect={onConnect}>

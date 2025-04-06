@@ -24,12 +24,12 @@ const sources = [
   },
 ];
 
-const AddSourcesBlock = () => {
+const AddSourcesBlock = ({onClose}) => {
   return (
     <div className="absolute top-10 bg-gray-200 z-50 rounded-md">
-      <span className="absolute top-0 border rounded-md border-red-400 m-1 right-0">
+      <button className="absolute top-0 border rounded-md border-red-400 m-1 right-0 cursor-pointer" onClick={onClose}>
         ❌
-      </span>
+      </button>
       <div className="mt-8 px-3 shadow-black inset-shadow-xs">
         <h2 className="text-2xl font-bold my-2">Add Sources Block</h2>
         <p>
