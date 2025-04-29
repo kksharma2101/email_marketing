@@ -1,27 +1,47 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
-import ReactFlow, { addEdge, Background, Controls, MiniMap } from "reactflow";
-import "reactflow/dist/style.css";
+import { useCallback, useState } from "react";
+import {
+  Background,
+  Controls,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import AddSourcesBlock from "./Sources";
+
+// node and edges
+const initialEdges = [];
 
 const initialNodes = [
   {
     id: "1",
+    position: { x: 100, y: 100 },
     type: "input",
-    data: { label: "Sequence Start Point" },
-    position: { x: 250, y: 5 },
+    data: { label: `${localStorage.getItem("node")}` },
+  },
+  {
+    id: "2",
+    position: { x: 100, y: 100 },
+    type: "input",
+    data: { label: "kamal" },
   },
 ];
 
 export const EmailFlow = () => {
   const [sources, setSources] = useState(false);
-  const initialEdges = [];
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds))[setEdges]
+    (connection) => {
+      const edge = { ...connection, id: String(Date.now()) };
+      setEdges((eds) => eds.concat(edge));
+    },
+    [setEdges]
   );
+
   // functions
   const handleSourcesOpen = () => {
     setSources(true);
@@ -30,29 +50,6 @@ export const EmailFlow = () => {
   const handleSourcesClose = () => {
     setSources(false);
   };
-
-  let id = 1;
-  const getId = () => id++;
-  // add new node
-  useEffect(() => {
-    const node = {
-      id: getId(),
-      type: "input",
-      data: (
-        <div className="flex items-center">
-          <span className="px-2">➕</span>
-          <div className="">
-            <h5 className="font-bold text-[10px] text-start">Leads From</h5>
-            <p className="text-[7px] text-wrap text-red-400 text-start">
-              {localStorage.getItem("node")}
-            </p>
-          </div>
-        </div>
-      ),
-      position: { x: 250, y: 5 },
-    };
-    setNodes((nds) => [...nds, node]);
-  }, []);
 
   return (
     <div>
@@ -66,7 +63,7 @@ export const EmailFlow = () => {
         </button>
       </div>
 
-      <div className="w-dvw h-dvh flex justify-center items-center flex-col">
+      <div className="h-dvh flex justify-center items-center flex-col">
         <div
           className="flex justify-center items-center flex-col p-3 border rounded-md w-fit mt-5 z-50 cursor-pointer"
           onClick={handleSourcesOpen}
@@ -79,9 +76,14 @@ export const EmailFlow = () => {
         {sources ? <AddSourcesBlock onClose={handleSourcesClose} /> : ""}
 
         {/* ReactFlow elements */}
-        <ReactFlow nodes={nodes} edges={edges} onConnect={onConnect} fitView>
-          <MiniMap />
-          <Background variant="" gap={12} size={1} />
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onConnect={onConnect}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+        >
+          <Background />
           <Controls />
         </ReactFlow>
       </div>
